@@ -4,11 +4,11 @@ namespace App\Remote;
 
 use Psr\Log\LoggerInterface;
 
-final class LoggerRemote
+final class LoggerRemote implements RemoteInterface
 {
     public function __construct(
         private LoggerInterface $logger,
-        private ButtonRemote $inner,
+        private RemoteInterface $inner,
     ) {
     }
 
