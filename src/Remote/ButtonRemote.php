@@ -2,6 +2,7 @@
 
 namespace App\Remote;
 
+use App\Remote\Button\ButtonInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use App\Remote\Button\PowerButton;
@@ -13,13 +14,7 @@ use App\Remote\Button\VolumeDownButton;
 final class ButtonRemote
 {
     public function __construct(
-        #[AutowireLocator([
-            'power' => PowerButton::class,
-            'channel-up' => ChannelUpButton::class,
-            'channel-down' => ChannelDownButton::class,
-            'volume-up' => VolumeUpButton::class,
-            'volume-down' => VolumeDownButton::class,
-        ])]
+        #[AutowireLocator(ButtonInterface::class)]
         private ContainerInterface $container,
     ) {
     }
