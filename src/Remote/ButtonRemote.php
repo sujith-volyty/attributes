@@ -3,38 +3,24 @@
 namespace App\Remote;
 
 use App\Remote\Button\ButtonInterface;
-use Psr\Container\ContainerInterface;
-use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
-use App\Remote\Button\PowerButton;
-use App\Remote\Button\ChannelUpButton;
-use App\Remote\Button\ChannelDownButton;
-use App\Remote\Button\VolumeUpButton;
-use App\Remote\Button\VolumeDownButton;
+use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
+use Symfony\Contracts\Service\ServiceCollectionInterface;
 
 final class ButtonRemote
 {
     public function __construct(
-        #[AutowireIterator(ButtonInterface::class, indexAttribute: 'key')]
-        private iterable $buttons,
+        #[AutowireLocator(ButtonInterface::class, indexAttribute: 'key')]
+        private ServiceCollectionInterface $buttons,
     ) {
     }
 
     public function press(string $name): void
     {
-        foreach ($this->buttons as $key => $button) {
-            if ($key === $name) {
-                $button->press();
-                return;
-            }
-        }
+        $this->buttons->get($name)->press();
     }
 
-    public function buttons(): array
+    public function buttons(): iterable
     {
-        $buttons = [];
-        foreach ($this->buttons as $name => $button) {
-            $buttons[] = $name;
-        }
-        return $buttons;
+        return array_keys($this->buttons->getProvidedServices());
     }
 }
